@@ -10,6 +10,13 @@ import (
 	"github.com/DeyiXu/bingWallpaper/pkg/bingclient"
 )
 
+// 由编译时 -ldflags 参数传入的值
+var (
+	Version   = "dev"
+	BuildTime = "unknown"
+	CommitSHA = "unknown"
+)
+
 func main() {
 	// 命令行参数
 	var (
@@ -20,6 +27,7 @@ func main() {
 		locale      string
 		logLevel    string
 		noTime      bool
+		showVersion bool
 	)
 
 	flag.StringVar(&outputDir, "dir", "./bing_wallpapers", "壁纸保存目录")
@@ -29,7 +37,16 @@ func main() {
 	flag.StringVar(&locale, "locale", "zh-CN", "语言区域 (zh-CN, en-US, ja-JP 等)")
 	flag.StringVar(&logLevel, "log-level", "info", "日志级别 (debug, info, warning, error)")
 	flag.BoolVar(&noTime, "no-time", false, "日志中不显示时间戳")
+	flag.BoolVar(&showVersion, "version", false, "显示版本信息并退出")
 	flag.Parse()
+
+	// 处理版本信息显示请求
+	if showVersion {
+		// 显示版本信息
+		fmt.Printf("BingWallpaper 版本: %s (构建于: %s, 提交: %s)\n\n", Version, BuildTime, CommitSHA)
+		// 已经在开始显示了版本信息，所以这里直接退出
+		os.Exit(0)
+	}
 
 	// 校验参数
 	if days < 1 || days > 16 {

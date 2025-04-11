@@ -19,7 +19,12 @@
 ./
 ├── main.go                 # 主程序
 ├── go.mod                  # Go模块定义
+├── Makefile                # 编译构建配置
 ├── README.md               # 项目说明文档
+├── bin/                    # 编译输出目录
+│   ├── bingWallpaper_linux_amd64    # Linux amd64 可执行文件
+│   ├── bingWallpaper_windows_amd64.exe  # Windows amd64 可执行文件
+│   └── ...                 # 其他平台的可执行文件
 ├── bing_wallpapers/        # 壁纸保存默认目录
 │   ├── YYYYMMDD_描述.jpg    # 下载的壁纸
 │   └── bing_data_YYYYMMDD.json  # 元数据
@@ -37,6 +42,27 @@
 ### 前提条件
 
 - Go 1.16 或更高版本
+
+### 使用 Makefile 编译
+
+```bash
+# 编译当前平台版本
+make
+
+# 交叉编译所有支持的平台版本
+make cross-build
+
+# 编译特定平台版本
+make linux-amd64
+make windows-amd64
+make darwin-arm64
+
+# 清理编译输出
+make clean
+
+# 查看帮助
+make help
+```
 
 ### 从源码安装
 
@@ -74,6 +100,9 @@ go build
 
 # 不显示日志中的时间戳
 ./bingWallpaper -no-time
+
+# 显示版本信息并退出
+./bingWallpaper -version
 ```
 
 ### 参数说明
@@ -83,10 +112,21 @@ go build
 | `-dir` | `./bing_wallpapers` | 壁纸保存目录 |
 | `-days` | `7` | 下载最近几天的壁纸 (1-16) |
 | `-hd` | `true` | 是否下载高清壁纸 |
-| `-json` | `true` | 是否保存原始JSON数据 |
+| `-json` | `false` | 是否保存原始JSON数据 |
 | `-locale` | `zh-CN` | 语言区域 (如 zh-CN, en-US, ja-JP 等) |
 | `-log-level` | `info` | 日志级别 (debug, info, warning, error) |
 | `-no-time` | `false` | 日志中不显示时间戳 |
+| `-version` | `false` | 显示版本信息并退出 |
+
+### 版本信息
+
+程序启动时会显示版本、构建时间和Git提交哈希信息，便于跟踪和调试：
+
+```
+BingWallpaper 版本: 1.0.0 (构建于: 2025-04-11 09:02:51, 提交: 1b45578)
+```
+
+也可以使用 `-version` 参数仅显示版本信息而不执行下载功能。
 
 ## 作为库使用
 
