@@ -1,0 +1,54 @@
+name: Release BingWallpaper
+
+on:
+  push:
+    tags:
+      - 'v*' # 匹配所有以v开头的标签，如v1.0.0
+
+jobs:
+  build-release:
+    name: 构建并发布Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 需要写入权限来创建Release
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 获取所有历史记录和标签
+
+      - name: 设置Go环境
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.23.6' # 可以根据你的需求调整Go版本
+
+      - name: 交叉编译所有平台
+        run: make cross-build
+
+      - name: 获取版本信息
+        id: get_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "release_name=BingWallpaper $VERSION" >> $GITHUB_OUTPUT
+
+      - name: 创建Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: ${{ steps.get_version.outputs.release_name }}
+          tag_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
+          files: |
+            bin/bingWallpaper_linux_amd64
+            bin/bingWallpaper_linux_arm64
+            bin/bingWallpaper_windows_amd64.exe
+            bin/bingWallpaper_windows_arm64.exe
+            bin/bingWallpaper_darwin_amd64
+            bin/bingWallpaper_darwin_arm64
+          generate_release_notes: true
