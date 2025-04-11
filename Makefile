@@ -47,7 +47,7 @@ clean:
 
 # 交叉编译目标
 .PHONY: cross-build
-cross-build: linux-amd64 linux-arm64 windows-amd64 darwin-amd64 darwin-arm64
+cross-build: linux-amd64 linux-arm64 windows-amd64 windows-arm64 darwin-amd64 darwin-arm64
 
 .PHONY: linux-amd64
 linux-amd64:
@@ -63,6 +63,11 @@ linux-arm64:
 windows-amd64:
 	@echo "构建 Windows (amd64)..."
 	GOOS=windows GOARCH=amd64 $(MAKE) build
+
+.PHONY: windows-arm64
+windows-arm64:
+	@echo "构建 Windows (arm64)..."
+	GOOS=windows GOARCH=arm64 $(MAKE) build
 
 .PHONY: darwin-amd64
 darwin-amd64:
@@ -86,6 +91,7 @@ help:
 	@echo "  make linux-amd64 - 构建 Linux amd64 版本"
 	@echo "  make linux-arm64 - 构建 Linux arm64 版本"
 	@echo "  make windows-amd64 - 构建 Windows amd64 版本"
+	@echo "  make windows-arm64 - 构建 Windows arm64 版本"
 	@echo "  make darwin-amd64 - 构建 macOS amd64 版本"
 	@echo "  make darwin-arm64 - 构建 macOS arm64 版本"
 	@echo ""
