@@ -2,7 +2,7 @@
 
 # https://github.com/DeyiXu/bingWallpaper
 # 脚本功能：使用bingWallpaper工具自动下载必应壁纸并设置为系统壁纸
-# 用法：./auto-download-bing-wallpapers.sh
+# 用法：./auto-set-wallpaper.sh
 
 # 设置壁纸存储目录
 WALLPAPER_DIR="$HOME/Pictures/bing_wallpapers"
