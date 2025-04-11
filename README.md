@@ -8,6 +8,7 @@
 - 可选下载高清版本（UHD）或标准版本
 - 支持保存图片元数据（JSON 格式）
 - 自动生成基于日期和图片描述的文件名
+- 支持指定自定义文件名保存壁纸
 - 支持多语言区域设置
 - 命令行界面，简单易用
 - 完善的日志记录系统，支持多种日志级别
@@ -95,6 +96,18 @@ go build
 # 只下载最新的1张壁纸
 ./bingWallpaper -days 1
 
+# 仅获取最后一天的壁纸（最新壁纸）
+./bingWallpaper -last
+
+# 下载最新壁纸并指定自定义文件名
+./bingWallpaper -last -name "桌面壁纸.jpg"
+
+# 使用自定义名称并保存 JSON 元数据
+./bingWallpaper -last -name "today" -json
+
+# 覆盖已存在的同名文件
+./bingWallpaper -last -name "desktop.jpg" -overwrite
+
 # 查看调试级别的详细日志
 ./bingWallpaper -log-level=debug
 
@@ -117,6 +130,9 @@ go build
 | `-log-level` | `info` | 日志级别 (debug, info, warning, error) |
 | `-no-time` | `false` | 日志中不显示时间戳 |
 | `-version` | `false` | 显示版本信息并退出 |
+| `-last` | `false` | 仅下载最后一天的壁纸（最新壁纸） |
+| `-name` | `""` | 指定保存的文件名 (如 my-wallpaper.jpg) |
+| `-overwrite` | `false` | 如果文件已存在则覆盖 |
 
 ### 版本信息
 
@@ -433,6 +449,47 @@ func main() {
 	
 	fmt.Printf("壁纸已下载: %s\n", result.ImagePath)
 }
+```
+
+### 5. 使用命令行下载最新壁纸并指定文件名
+
+以下是一些常用命令行使用场景：
+
+```bash
+# 仅下载最新壁纸
+./bingWallpaper -last
+
+# 下载最新壁纸并使用自定义名称（自动添加.jpg扩展名）
+./bingWallpaper -last -name "我的壁纸"
+
+# 下载最新壁纸并指定完整文件名
+./bingWallpaper -last -name "desktop_background.jpg"
+
+# 下载最新壁纸并保存元数据
+./bingWallpaper -last -json
+
+# 下载英文区域的最新壁纸并指定文件名
+./bingWallpaper -last -locale en-US -name "today_wallpaper"
+```
+
+### 6. 结合系统任务调度器实现自动更新壁纸
+
+在 Linux 系统上，您可以创建一个 crontab 任务来每天自动下载最新壁纸：
+
+```bash
+# 编辑 crontab
+crontab -e
+
+# 添加以下行来每天凌晨2点运行（调整路径为您的实际路径）
+0 2 * * * /home/user/bin/bingWallpaper -last -dir /home/user/Pictures/Wallpapers -name "today.jpg" -overwrite > /dev/null 2>&1
+```
+
+在 Windows 系统上，可以创建一个批处理文件，然后通过任务计划程序设置定时执行：
+
+```batch
+@echo off
+rem 保存为 update_wallpaper.bat
+"C:\Path\To\bingWallpaper.exe" -last -dir "C:\Users\YourName\Pictures\Wallpapers" -name "today.jpg" -overwrite
 ```
 
 ## 常见问题解答
